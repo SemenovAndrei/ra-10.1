@@ -74,16 +74,16 @@ function ServiceAdd() {
   }
 
   const checkEmpty = (item) => {
-    if (item.value) {
-      item.classList.remove('empty')
-      return false
+    console.log(item.name)
+    if (!item.value || (item.name === 'price' && isNaN(item.value))) {
+      if (!item.classList.contains('empty')) {
+        item.classList.add('empty')
+      }
+      return true
     }
 
-    if (!item.classList.contains('empty')) {
-      item.classList.add('empty')
-    }
-
-    return true
+    item.classList.remove('empty')
+    return false
   }
 
   const onEdit = () => {
