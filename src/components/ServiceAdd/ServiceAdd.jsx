@@ -74,7 +74,6 @@ function ServiceAdd() {
   }
 
   const checkEmpty = (item) => {
-    console.log(item.name)
     if (!item.value || (item.name === 'price' && isNaN(item.value))) {
       if (!item.classList.contains('empty')) {
         item.classList.add('empty')
