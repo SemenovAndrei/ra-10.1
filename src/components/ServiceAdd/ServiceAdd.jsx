@@ -1,11 +1,11 @@
 import React, { useRef } from 'react'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   serviceAdd,
   serviceChangeField,
   serviceClearField,
+  serviceEdit,
 } from '../../actions/actionsCreators'
 
 const Form = styled.form`
@@ -39,8 +39,18 @@ const Button = styled.button`
     background-color: #02a7da;
   }
 `
+const ButtonOk = styled(Button)`
+  width: 5%;
+`
+const ButtonDelete = styled(ButtonOk)`
+  background-color: #ff6161;
 
-function ServiceAdd(props) {
+  :hover {
+    background-color: #e70000;
+  }
+`
+
+function ServiceAdd() {
   const inputName = useRef(null)
   const inputPrice = useRef(null)
 
@@ -68,21 +78,52 @@ function ServiceAdd(props) {
       item.classList.remove('empty')
       return false
     }
+
     if (!item.classList.contains('empty')) {
       item.classList.add('empty')
     }
+
     return true
+  }
+
+  const onEdit = () => {
+    if (checkEmpty(inputName.current) || checkEmpty(inputPrice.current)) {
+      return
+    }
+
+    dispatch(serviceEdit(item.id, item.name, item.price))
+    dispatch(serviceClearField())
+  }
+
+  const onCancel = () => {
+    dispatch(serviceClearField())
   }
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Input name="name" onChange={handleChange} value={item.name} ref={inputName} />
-      <Input name="price" onChange={handleChange} value={item.price} ref={inputPrice} />
-      <Button type="submit">Save</Button>
+      <Input
+        name="name"
+        onChange={handleChange}
+        value={item.name}
+        ref={inputName}
+        placeholder="введите название"
+      />
+      <Input
+        name="price"
+        onChange={handleChange}
+        value={item.price}
+        ref={inputPrice}
+        placeholder="введите стоимость"
+      />
+      {!item.editMode && <Button type="submit">Save</Button>}
+      {item.editMode && (
+        <>
+          <ButtonOk onClick={() => onEdit()}>✓</ButtonOk>
+          <ButtonDelete onClick={() => onCancel()}>✖</ButtonDelete>
+        </>
+      )}
     </Form>
   )
 }
-
-ServiceAdd.propTypes = {}
 
 export default ServiceAdd

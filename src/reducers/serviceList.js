@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { SERVICE_ADD, SERVICE_REMOVE } from '../actions/actionTypes'
+import { SERVICE_ADD, SERVICE_EDIT, SERVICE_REMOVE } from '../actions/actionTypes'
 
 const initialState = [
   { id: nanoid(), name: 'Замена стекла', price: 21000 },
@@ -14,6 +14,14 @@ export default function serviceListReducer(state = initialState, action) {
     case SERVICE_REMOVE:
       const { id } = action.payload
       return state.filter((service) => service.id !== id)
+    case SERVICE_EDIT:
+      const { idEdit, nameEdit, priceEdit } = action.payload
+      return state.map((service) => {
+        if (service.id === idEdit) {
+          return { ...service, name: nameEdit, price: priceEdit }
+        }
+        return service
+      })
     default:
       return state
   }

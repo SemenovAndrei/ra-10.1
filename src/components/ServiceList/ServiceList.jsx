@@ -1,7 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { serviceRemove } from '../../actions/actionsCreators'
+import {
+  serviceClearFieldDelete,
+  serviceEditField,
+  serviceRemove,
+} from '../../actions/actionsCreators'
 import styled from 'styled-components'
 
 const Ul = styled.ul`
@@ -48,12 +51,17 @@ const ButtonDelete = styled(Button)`
   }
 `
 
-function ServiceList(props) {
+function ServiceList() {
   const items = useSelector((state) => state.serviceList)
   const dispatch = useDispatch()
 
   const handleRemove = (id) => {
     dispatch(serviceRemove(id))
+    dispatch(serviceClearFieldDelete(id))
+  }
+
+  const handleEdit = (id, name, price) => {
+    dispatch(serviceEditField(id, name, price))
   }
 
   return (
@@ -62,14 +70,12 @@ function ServiceList(props) {
         <Li key={o.id}>
           <ItemName>{o.name}</ItemName>
           <ItemPrice>{o.price}</ItemPrice>
-          <Button>🖉</Button>
-          <ButtonDelete onClick={() => handleRemove(o.id)}>✕</ButtonDelete>
+          <Button onClick={() => handleEdit(o.id, o.name, o.price)}>🖉</Button>
+          <ButtonDelete onClick={() => handleRemove(o.id)}>✖</ButtonDelete>
         </Li>
       ))}
     </Ul>
   )
 }
-
-ServiceList.propTypes = {}
 
 export default ServiceList
